@@ -1,0 +1,21 @@
+(-) Mối quan hệ Model
+
+(+) One to One: hasOne <--> belongTo
+    vd: User -> hasOne(Profile)
+        Profile -> belongTo(User)
+
+        Sử dụng: $profile = $user->profile;
+                 $user = $profile->user;
+
+(+) One to Many: hasMany <--> belongTo
+    vd: User -> hasMany(Post)
+        Post -> belongTo(User)
+
+        Sử dụng: ---
+
+(+) Many to Many: belongToMany <--> belongToMany
+    vd: Product -> belongToMany(Tag) : Tag -> thẻ Tag
+        Tag -> belongToMany(Product)
+
+    Giải thích: 1 Product có thể có nhiều Tag ('bán chạy', 'mới', 'giá rẻ', ...) Thông qua bảng trung gian product_tag
+                1 Tag có thể có nhiều Product sử dụng (Áo.Tag['mới'], Quần.Tag['mới'], Mũ.Tag['mới'])
