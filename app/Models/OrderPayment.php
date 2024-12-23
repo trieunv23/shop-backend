@@ -16,13 +16,14 @@ class OrderPayment extends Model
 
     protected $fillable = [ 
         'order_id', 
-        'payment_method', 
-        'payment_status', 
-        'payment_amount', 
-        'payment_date', 
-        'transaction_details',
-        'payment_image',
-        'payment_code' 
+        'method', 
+        'status', 
+        'total_amount', 
+        'date', 
+        'transaction_id',
+        'receipt_url',
+        'code',
+        'notes',
     ];
 
     public static function boot()
@@ -30,9 +31,9 @@ class OrderPayment extends Model
         parent::boot();
 
         static::creating(function ($order_payment) {
-            $order_payment->payment_code = IdGenerator::generate([
+            $order_payment->code = IdGenerator::generate([
                 'table' => 'order_payments',
-                'field' => 'payment_code',
+                'field' => 'code',
                 'length' => 8,
                 'prefix' =>  STR::random(8),
                 'reset_on_prefix_change' => true,

@@ -13,16 +13,16 @@ class VerifyEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $verify;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($verify)
     {   
-        $this->user = $user;
+        $this->verify = $verify;
     }
 
     /**
@@ -33,7 +33,7 @@ class VerifyEmail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Verify Email',
+            subject: 'Xác Minh Email',
         );
     }
 
@@ -47,8 +47,7 @@ class VerifyEmail extends Mailable
         return new Content( 
             view: 'emails.verify',
             with: [
-                'user' => $this->user,
-                'verificationCode' => $this->user->verification_code,
+                'verify' => $this->verify
             ],
         );
     }

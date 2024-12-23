@@ -12,12 +12,10 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_code', 
+        'code', 
         'user_id', 
         'total_amount', 
-        'voucher_id', 
-        'order_status',  
-        'confirmation_date'
+        'status',  
     ];
 
     public static function boot()
@@ -25,9 +23,9 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            $order->order_code = IdGenerator::generate([
+            $order->code = IdGenerator::generate([
                 'table' => 'orders',
-                'field' => 'order_code',
+                'field' => 'code',
                 'length' => 12,
                 'prefix' => 'ORD' . Carbon::now()->format('y') . Carbon::now()->format('md'),
                 'reset_on_prefix_change' => true,
@@ -39,15 +37,19 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function orderSchedule() {
-        return $this->hasOne(OrderSchedule::class);
-    }
-
     public function orderPayment() {
         return $this->hasOne(OrderPayment::class);
     }
 
     public function orderProducts() {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    public function orderStatuses() {
+        return $this->hasMany(OrderStatus::class);
+    }
+
+    public function orderAddress() {
+        return $this->hasOne(OrderAddress::class);
     }
 }

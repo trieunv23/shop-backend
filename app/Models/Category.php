@@ -18,6 +18,8 @@ class Category extends Model
         'slug',
     ];
 
+    protected $hidden = ['pivot'];
+
     public static function boot()
     {
         parent::boot();

@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Support\Str;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -21,15 +20,15 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_code',
+        'code',
         'username',
         'name',
-        'email',
         'password',
         'phone_number',
-        'verification_code',
-        'verification_code_expires_at',
-        'is_verified',
+        'email',
+        'email_verified_at',
+        'status',
+        'roles',
     ];
 
     /**
@@ -58,14 +57,22 @@ class User extends Authenticatable implements MustVerifyEmail
         parent::boot();
 
         static::creating(function ($user) {
-            $user->user_code = IdGenerator::generate([
+            $user->code = IdGenerator::generate([
                 'table' => 'users',
-                'field' => 'user_code',
+                'field' => 'code',
                 'length' => 18,
                 'prefix' => 'uid_' . Str::random(14),
                 'reset_on_prefix_change' => true,
             ]);
         });
+    }
+
+    public function getJWTIdentifier() { 
+        return $this->getKey(); 
+    }
+
+    public function getJWTCustomClaims() { 
+        return []; 
     }
 
     public function profile() {
@@ -82,5 +89,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function orders() {
         return $this->hasMany(Order::class);
+    }
+
+    public function emailVerifications() {
+        return $this->hasMany(EmailVerification::class);
     }
 }

@@ -12,13 +12,14 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_code',
+        'code',
         'name', 
         'price', 
         'description', 
         'category_id', 
         'is_active', 
         'weight', 
+        'sold_out', 
     ];
 
     public static function boot()
@@ -26,9 +27,9 @@ class Product extends Model
         parent::boot();
 
         static::creating(function ($product) {
-            $product->product_code = IdGenerator::generate([
+            $product->code = IdGenerator::generate([
                 'table' => 'products',
-                'field' => 'product_code',
+                'field' => 'code',
                 'length' => 18,
                 'prefix' => 'pid_' . Str::random(14),
                 'reset_on_prefix_change' => true,
@@ -51,11 +52,11 @@ class Product extends Model
                     ->withTimestamps();
     }
 
-    public function productImages() {
+    public function images() {
         return $this->hasMany(ProductImage::class);
     }
 
-    public function firstProductImage() {
+    public function image() {
         return $this->hasOne(ProductImage::class)->oldest('id');
     }
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Helpers\StringHelper;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class CategoryController extends Controller
         $categories = Category::withCount('products')->get();
 
         return response()->json([
-            'categories' => StringHelper::convertListKeysToCamelCase($categories->toArray())
+            'categories' => $categories
         ]);
     }
 

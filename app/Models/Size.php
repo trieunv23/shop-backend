@@ -11,6 +11,8 @@ class Size extends Model
 
     protected $fillable = ['name'];
 
+    protected $hidden = ['pivot'];
+
     public function products() {
         return $this->belongsToMany(Product::class, 'product_sizes', 'product_id', 'size_id');
     }
